@@ -37,3 +37,30 @@ http :8080 Host:limited-api.pathfinder.io
 ```bash
 watch -n 0.1 http -h :8080 Host:busy-api.pathfinder.io X-API-KEY:zztop1 
 ```
+
+## Fallback of the unavailable service `circuit breaker`
+
+```bash
+http :8080 Host:down-api.pathfinder.io
+```
+
+## Circuit Breaker
+
+Add `@EnableHystrix` annotation or explicitly define bean
+
+```java
+@Bean
+public HystrixCommandAspect hystrixAspect() {
+    return new HystrixCommandAspect();
+}
+``` 
+
+Run
+
+```bash
+watch -n 1 http :8080 Host:down-api.pathfinder.io
+```
+
+Access [Hystrix Dashboard](http://127.0.0.1:8082/hystrix)
+
+Make sure [Turbine Stream](http://localhost:8080/actuator/hystrix.stream) is available.
